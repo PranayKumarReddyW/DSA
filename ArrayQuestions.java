@@ -1,6 +1,7 @@
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class Arrays {
+public class ArrayQuestions {
     public static void main(String[] args) {
         // reverseArray();
         // rotateArrayRightByK();
@@ -12,7 +13,9 @@ public class Arrays {
         // uniqueElement();
         // dutchNationalAlgorithm();
         // kadanesAlgorithm();
-        indexOfMaximumSumOfSubarray();
+        // indexOfMaximumSumOfSubarray();
+        // twoSumOptimal();
+        // twoSumBrute();
     }
 
     public static void reverseArray() {
@@ -345,4 +348,48 @@ public class Arrays {
         System.out.println(maxSum);
     }
 
+    public static void twoSumBrute() { // ==> Space complexity: O(1) and Time complexity: O(n^2)
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter size of array: ");
+        int n = sc.nextInt();
+        int arr[] = new int[n];
+        System.out.println("Enter array values: ");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        System.out.println("Enter target value: ");
+        int target = sc.nextInt();
+        sc.close();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (arr[i] + arr[j] == target) {
+                    System.out.println(i + " " + j);
+                    return;
+                }
+            }
+        }
+    }
+
+    // optimal
+    public static void twoSumOptimal() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter size of array: ");
+        int n = sc.nextInt();
+        int arr[] = new int[n];
+        System.out.println("Enter array values: ");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        System.out.println("Enter target value: ");
+        int target = sc.nextInt();
+        sc.close();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (map.containsKey(target - arr[i])) {
+                System.out.println(i + " " + map.get(target - arr[i]));
+            } else {
+                map.put(arr[i], i);
+            }
+        }
+    }
 }
