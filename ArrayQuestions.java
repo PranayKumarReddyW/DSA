@@ -286,7 +286,6 @@ public class ArrayQuestions {
                 int temp = arr[high];
                 arr[low] = arr[high];
                 arr[high] = temp;
-                mid++;
                 high--;
             }
         }
