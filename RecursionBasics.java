@@ -1,4 +1,4 @@
-public class Recursion {
+public class RecursionBasics {
     public static void main(String[] args) {
         // printStartToEnd(1, 5);
         // printEndToStart(5, 1);
