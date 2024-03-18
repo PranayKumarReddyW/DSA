@@ -53,10 +53,21 @@ public class Stacks {
         // System.out.println(Arrays.toString(ans));
 
         // System.out.println(isValid("[[[]]]]"));
-        int[] arr = { 100, 80, 60, 70, 60, 75, 85 };
-        int[] res = calculateSpan(arr, arr.length);
-        System.out.println(Arrays.toString(res));
+        // int[] arr = { 100, 80, 60, 70, 60, 75, 85 };
+        // int[] res = calculateSpan(arr, arr.length);
+        // System.out.println(Arrays.toString(res));
 
+        // String exp = "a+b*(c^d-e)^(f+g*h)-i";
+        // System.out.println(infixToPostfix(exp));
+
+        // String exp = "A*B+C/D";
+        // System.out.println(infixToPrefix(exp));
+
+        // System.out.println(preToInfix("*+AB-CD"));
+
+        // System.out.println(postToInfix("AB+CD-*"));
+
+        System.out.println();
     }
 
     public static int[] nextGreaterElementsToRight(int[] nums) {
@@ -169,6 +180,147 @@ public class Stacks {
 
         }
         return ans;
+    }
+
+    public static String infixToPostfix(String exp) {
+        String postfix = "";
+        Stack<Character> st = new Stack<>();
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i);
+            if (Character.isLetterOrDigit(c)) {
+                postfix += c;
+            } else {
+                if (c == '(') {
+                    st.push(c);
+                } else if (c == ')') {
+                    while (!st.isEmpty() && st.peek() != '(') {
+                        postfix += st.pop();
+                    }
+                    st.pop();
+                } else {
+                    while (!st.isEmpty() && infixToPostfixHelper(c) <= infixToPostfixHelper(st.peek())) {
+                        postfix += st.pop();
+                    }
+                    st.push(c);
+
+                }
+            }
+        }
+        while (!st.isEmpty())
+            postfix += st.pop();
+        return postfix;
+    }
+
+    public static int infixToPostfixHelper(char c) {
+        if (c == '+' || c == '-') {
+            return 1;
+        } else if (c == '*' || c == '/') {
+            return 2;
+        } else if (c == '^') {
+            return 3;
+        } else {
+            return -1;
+        }
+    }
+
+    public static String infixToPrefix(String s) {
+        Stack<Character> st = new Stack<>();
+        String res = "";
+        s = new StringBuilder(s).reverse().toString();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isLetterOrDigit(c)) {
+                res += c;
+            } else {
+                if (c == ')') {
+                    st.push(')');
+                } else if (c == '(') {
+                    while (!st.isEmpty() && st.peek() != ')') {
+                        res += st.pop();
+                    }
+                    st.pop();
+                } else {
+                    while (!st.isEmpty() && infixToPostfixHelper(c) <= infixToPostfixHelper(st.peek())) {
+                        res += st.pop();
+                    }
+                    st.push(c);
+                }
+            }
+
+        }
+        while (!st.isEmpty()) {
+            res += st.pop();
+
+        }
+        return new StringBuilder(res).reverse().toString();
+    }
+
+    public static String preToInfix(String pre_exp) {
+        Stack<String> st = new Stack<>();
+        pre_exp = new StringBuilder(pre_exp).reverse().toString();
+        for (int i = 0; i < pre_exp.length(); i++) {
+            char c = pre_exp.charAt(i);
+            if (Character.isLetterOrDigit(c)) {
+                st.push(c + "");
+            } else {
+                String op1 = st.pop();
+                String op2 = st.pop();
+                st.push("(" + op1 + c + op2 + ")");
+            }
+        }
+        return st.pop();
+    }
+
+    public static String postToInfix(String exp) {
+        Stack<String> st = new Stack<>();
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i);
+            if (Character.isLetterOrDigit(c)) {
+                st.push(c + "");
+            } else {
+                String op2 = st.pop();
+                String op1 = st.pop();
+                st.push("(" + op1 + c + op2 + ")");
+            }
+        }
+        return st.pop();
+    }
+
+    public static int largestRectangleArea(int[] heights) {
+        int maxArea = 0;
+        int n = heights.length;
+        Stack<Integer> st = new Stack<>();
+        int nSR[] = new int[n]; // next smaller to right
+        int nSL[] = new int[n]; // next smaller to left
+        for (int i = 0; i < n; i++) {
+            while (!st.isEmpty() && heights[i] <= heights[st.peek()]) {
+                st.pop();
+            }
+            if (st.isEmpty()) {
+                nSL[i] = -1;
+            } else {
+                nSL[i] = st.peek();
+            }
+            st.push(i);
+        }
+        st.clear();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && heights[i] <= heights[st.peek()]) {
+                st.pop();
+            }
+            if (st.isEmpty()) {
+                nSR[i] = n;
+            } else {
+                nSR[i] = st.peek();
+            }
+            st.push(i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            int area = heights[i] * (nSR[i] - nSL[i] - 1);
+            maxArea = Math.max(maxArea, area);
+        }
+        return maxArea;
     }
 
 }
